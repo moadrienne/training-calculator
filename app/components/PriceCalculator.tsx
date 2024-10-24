@@ -146,9 +146,9 @@ const PriceCalculator = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 border">
+    <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 border text-black">
       <div className="flex justify-between items-center mb-8 border-b pb-6">
-        <h1 className="text-3xl font-light tracking-tight">Price Calculator</h1>
+        <h1 className="text-3xl font-light tracking-tight text-black">Price Calculator</h1>
         <button 
           onClick={exportToCSV}
           className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded hover:bg-black transition-colors"
@@ -161,7 +161,7 @@ const PriceCalculator = () => {
       <div className="space-y-8">
         {/* Training Type Selection */}
         <div className="space-y-3">
-          <label className="block text-sm font-medium uppercase tracking-wide">Training Type</label>
+          <label className="block text-sm font-medium uppercase tracking-wide text-black">Training Type</label>
           <div className="flex space-x-6">
             <label className="inline-flex items-center">
               <input
@@ -170,7 +170,7 @@ const PriceCalculator = () => {
                 checked={trainingType === 'in-person'}
                 onChange={() => setTrainingType('in-person')}
               />
-              <span className="ml-2">In Person</span>
+              <span className="ml-2 text-black">In Person</span>
             </label>
             <label className="inline-flex items-center">
               <input
@@ -179,16 +179,16 @@ const PriceCalculator = () => {
                 checked={trainingType === 'virtual'}
                 onChange={() => setTrainingType('virtual')}
               />
-              <span className="ml-2">Virtual</span>
+              <span className="ml-2 text-black">Virtual</span>
             </label>
           </div>
         </div>
 
         {/* Duration Selection */}
         <div className="space-y-3">
-          <label className="block text-sm font-medium uppercase tracking-wide">Duration</label>
+          <label className="block text-sm font-medium uppercase tracking-wide text-black">Duration</label>
           <select 
-            className="w-full rounded-md border p-3 focus:ring-2 focus:ring-black focus:border-black transition-colors"
+            className="w-full rounded-md border p-3 focus:ring-2 focus:ring-black focus:border-black transition-colors text-black"
             value={duration}
             onChange={(e) => setDuration(e.target.value)}
           >
@@ -202,10 +202,10 @@ const PriceCalculator = () => {
         {/* Trainers Section */}
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <label className="block text-sm font-medium uppercase tracking-wide">Trainers</label>
+            <label className="block text-sm font-medium uppercase tracking-wide text-black">Trainers</label>
             <button 
               onClick={addTrainer}
-              className="flex items-center gap-2 px-3 py-2 bg-white rounded hover:bg-black hover:text-white transition-colors text-sm border"
+              className="flex items-center gap-2 px-3 py-2 bg-white rounded hover:bg-black hover:text-white transition-colors text-sm border text-black"
             >
               <Plus className="w-4 h-4" />
               Add Trainer
@@ -213,11 +213,11 @@ const PriceCalculator = () => {
           </div>
           
           {trainers.map((trainer) => (
-            <div key={trainer.id} className="flex gap-4 items-end p-4 bg-white rounded-lg border">
+            <div key={trainer.id} className="flex gap-4 items-end p-4 bg-white rounded-lg border text-black">
               <div className="flex-1 space-y-2">
-                <label className="block text-sm font-medium">Role</label>
+                <label className="block text-sm font-medium text-black">Role</label>
                 <select 
-                  className="w-full rounded-md border p-2 focus:ring-2 focus:ring-black focus:border-black"
+                  className="w-full rounded-md border p-2 focus:ring-2 focus:ring-black focus:border-black text-black"
                   value={trainer.role}
                   onChange={(e) => updateTrainer(trainer.id, 'role', e.target.value)}
                 >
@@ -228,20 +228,20 @@ const PriceCalculator = () => {
               </div>
               
               <div className="w-24 space-y-2">
-                <label className="block text-sm font-medium">Count</label>
+                <label className="block text-sm font-medium text-black">Count</label>
                 <input
                   type="number"
                   min="1"
                   value={trainer.count}
                   onChange={(e) => updateTrainer(trainer.id, 'count', parseInt(e.target.value) || 1)}
-                  className="w-full rounded-md border p-2 focus:ring-2 focus:ring-black focus:border-black"
+                  className="w-full rounded-md border p-2 focus:ring-2 focus:ring-black focus:border-black text-black"
                 />
               </div>
 
               {trainers.length > 1 && (
                 <button
                   onClick={() => removeTrainer(trainer.id)}
-                  className="hover:text-red-500 transition-colors"
+                  className="text-black hover:text-red-500 transition-colors"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -253,9 +253,9 @@ const PriceCalculator = () => {
         {/* Travel Time Selection */}
         {trainingType === 'in-person' && (
           <div className="space-y-3">
-            <label className="block text-sm font-medium uppercase tracking-wide">Travel Time (per person)</label>
+            <label className="block text-sm font-medium uppercase tracking-wide text-black">Travel Time (per person)</label>
             <select 
-              className="w-full rounded-md border p-3 focus:ring-2 focus:ring-black focus:border-black"
+              className="w-full rounded-md border p-3 focus:ring-2 focus:ring-black focus:border-black text-black"
               value={travelTime}
               onChange={(e) => setTravelTime(e.target.value as TravelTimeType)}
             >
@@ -270,29 +270,29 @@ const PriceCalculator = () => {
 
         {/* Project Management Hours */}
         <div className="space-y-3">
-          <label className="block text-sm font-medium uppercase tracking-wide">Project Management Hours</label>
+          <label className="block text-sm font-medium uppercase tracking-wide text-black">Project Management Hours</label>
           <input
             type="number"
             min="0"
             step="0.5"
             value={pmHours}
             onChange={(e) => setPmHours(parseFloat(e.target.value) || 0)}
-            className="w-full rounded-md border p-3 focus:ring-2 focus:ring-black focus:border-black"
+            className="w-full rounded-md border p-3 focus:ring-2 focus:ring-black focus:border-black text-black"
             placeholder="Enter PM hours"
           />
-          <p className="text-sm">Rate: ${PM_RATE}/hour</p>
+          <p className="text-sm text-black">Rate: ${PM_RATE}/hour</p>
         </div>
 
         {/* Price Breakdown */}
-        <div className="mt-8 bg-white rounded-lg p-6 border">
+        <div className="mt-8 bg-white rounded-lg p-6 border text-black">
           <div className="space-y-3">
             {trainers.map((trainer) => (
               <div key={trainer.id} className="flex justify-between text-sm">
-                <span>
+                <span className="text-black">
                   {trainer.role.charAt(0).toUpperCase() + trainer.role.slice(1)}
                   {trainer.count > 1 ? ` (${trainer.count}x)` : ''}:
                 </span>
-                <span className="font-medium">
+                <span className="font-medium text-black">
                   ${(pricing[trainingType][duration][trainer.role] * trainer.count).toLocaleString()}
                 </span>
               </div>
@@ -300,35 +300,34 @@ const PriceCalculator = () => {
 
             {trainingType === 'in-person' && (
               <div className="flex justify-between text-sm">
-                <span>Travel Fees ({trainers.reduce((sum, t) => sum + t.count, 0)} people):</span>
-                <span className="font-medium">${calculatePrices().travelPrice.toLocaleString()}</span>
+                <span className="text-black">Travel Fees ({trainers.reduce((sum, t) => sum + t.count, 0)} people):</span>
+                <span className="font-medium text-black">${calculatePrices().travelPrice.toLocaleString()}</span>
               </div>
             )}
 
             <div className="flex justify-between text-sm">
-              <span>Project Management ({pmHours} hours):</span>
-              <span className="font-medium">${calculatePrices().pmCost.toLocaleString()}</span>
+              <span className="text-black">Project Management ({pmHours} hours):</span>
+              <span className="font-medium text-black">${calculatePrices().pmCost.toLocaleString()}</span>
             </div>
 
             <div className="flex justify-between pt-3 border-t text-sm">
-              <span>Subtotal:</span>
-              <span className="font-medium">${calculatePrices().subtotal.toLocaleString()}</span>
+              <span className="text-black">Subtotal:</span>
+              <span className="font-medium text-black">${calculatePrices().subtotal.toLocaleString()}</span>
             </div>
 
             <div className="flex justify-between text-sm bg-white p-2 rounded border">
-              <span>Administrative Cost (30%):</span>
-              <span className="font-medium">${calculatePrices().adminCost.toLocaleString()}</span>
+              <span className="text-black">Administrative Cost (30%):</span>
+              <span className="font-medium text-black">${calculatePrices().adminCost.toLocaleString()}</span>
             </div>
 
             <div className="flex justify-between pt-3 border-t text-lg">
-              <span className="font-medium">Total:</span>
-              <span className="font-bold">${calculatePrices().total.toLocaleString()}</span>
+              <span className="font-medium text-black">Total:</span>
+              <span className="font-bold text-black">${calculatePrices().total.toLocaleString()}</span>
             </div>
           </div>
         </div>
       </div>
     </div>
   );
-};
 
 export default PriceCalculator;
