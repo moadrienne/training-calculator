@@ -146,12 +146,12 @@ const PriceCalculator = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 border border-gray-100">
+    <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 border">
       <div className="flex justify-between items-center mb-8 border-b pb-6">
         <h1 className="text-3xl font-light tracking-tight">Price Calculator</h1>
         <button 
           onClick={exportToCSV}
-          className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded hover:bg-gray-800 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded hover:bg-black transition-colors"
         >
           <Download className="w-4 h-4" />
           Export to CSV
@@ -188,7 +188,7 @@ const PriceCalculator = () => {
         <div className="space-y-3">
           <label className="block text-sm font-medium uppercase tracking-wide">Duration</label>
           <select 
-            className="w-full rounded-md border border-gray-200 p-3 focus:ring-2 focus:ring-black focus:border-black transition-colors"
+            className="w-full rounded-md border p-3 focus:ring-2 focus:ring-black focus:border-black transition-colors"
             value={duration}
             onChange={(e) => setDuration(e.target.value)}
           >
@@ -205,7 +205,7 @@ const PriceCalculator = () => {
             <label className="block text-sm font-medium uppercase tracking-wide">Trainers</label>
             <button 
               onClick={addTrainer}
-              className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded hover:bg-gray-200 transition-colors text-sm"
+              className="flex items-center gap-2 px-3 py-2 bg-white rounded hover:bg-black hover:text-white transition-colors text-sm border"
             >
               <Plus className="w-4 h-4" />
               Add Trainer
@@ -213,11 +213,11 @@ const PriceCalculator = () => {
           </div>
           
           {trainers.map((trainer) => (
-            <div key={trainer.id} className="flex gap-4 items-end p-4 bg-gray-50 rounded-lg">
+            <div key={trainer.id} className="flex gap-4 items-end p-4 bg-white rounded-lg border">
               <div className="flex-1 space-y-2">
                 <label className="block text-sm font-medium">Role</label>
                 <select 
-                  className="w-full rounded-md border border-gray-200 p-2 focus:ring-2 focus:ring-black focus:border-black"
+                  className="w-full rounded-md border p-2 focus:ring-2 focus:ring-black focus:border-black"
                   value={trainer.role}
                   onChange={(e) => updateTrainer(trainer.id, 'role', e.target.value)}
                 >
@@ -234,7 +234,7 @@ const PriceCalculator = () => {
                   min="1"
                   value={trainer.count}
                   onChange={(e) => updateTrainer(trainer.id, 'count', parseInt(e.target.value) || 1)}
-                  className="w-full rounded-md border border-gray-200 p-2 focus:ring-2 focus:ring-black focus:border-black"
+                  className="w-full rounded-md border p-2 focus:ring-2 focus:ring-black focus:border-black"
                 />
               </div>
 
@@ -255,7 +255,7 @@ const PriceCalculator = () => {
           <div className="space-y-3">
             <label className="block text-sm font-medium uppercase tracking-wide">Travel Time (per person)</label>
             <select 
-              className="w-full rounded-md border border-gray-200 p-3 focus:ring-2 focus:ring-black focus:border-black"
+              className="w-full rounded-md border p-3 focus:ring-2 focus:ring-black focus:border-black"
               value={travelTime}
               onChange={(e) => setTravelTime(e.target.value as TravelTimeType)}
             >
@@ -277,14 +277,14 @@ const PriceCalculator = () => {
             step="0.5"
             value={pmHours}
             onChange={(e) => setPmHours(parseFloat(e.target.value) || 0)}
-            className="w-full rounded-md border border-gray-200 p-3 focus:ring-2 focus:ring-black focus:border-black"
+            className="w-full rounded-md border p-3 focus:ring-2 focus:ring-black focus:border-black"
             placeholder="Enter PM hours"
           />
           <p className="text-sm">Rate: ${PM_RATE}/hour</p>
         </div>
 
         {/* Price Breakdown */}
-        <div className="mt-8 bg-gray-50 rounded-lg p-6 border border-gray-100">
+        <div className="mt-8 bg-white rounded-lg p-6 border">
           <div className="space-y-3">
             {trainers.map((trainer) => (
               <div key={trainer.id} className="flex justify-between text-sm">
@@ -315,7 +315,7 @@ const PriceCalculator = () => {
               <span className="font-medium">${calculatePrices().subtotal.toLocaleString()}</span>
             </div>
 
-            <div className="flex justify-between text-sm bg-blue-50 p-2 rounded">
+            <div className="flex justify-between text-sm bg-white p-2 rounded border">
               <span>Administrative Cost (30%):</span>
               <span className="font-medium">${calculatePrices().adminCost.toLocaleString()}</span>
             </div>
