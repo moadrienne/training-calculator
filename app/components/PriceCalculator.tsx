@@ -161,7 +161,7 @@ const PriceCalculator = () => {
       <div className="space-y-8">
         {/* Training Type Selection */}
         <div className="space-y-3">
-          <label className="block text-sm font-medium uppercase tracking-wide text-black-600">Training Type</label>
+          <label className="block text-sm font-medium uppercase tracking-wide">Training Type</label>
           <div className="flex space-x-6">
             <label className="inline-flex items-center">
               <input
@@ -170,7 +170,7 @@ const PriceCalculator = () => {
                 checked={trainingType === 'in-person'}
                 onChange={() => setTrainingType('in-person')}
               />
-              <span className="ml-2 text-black-800">In Person</span>
+              <span className="ml-2">In Person</span>
             </label>
             <label className="inline-flex items-center">
               <input
@@ -179,16 +179,16 @@ const PriceCalculator = () => {
                 checked={trainingType === 'virtual'}
                 onChange={() => setTrainingType('virtual')}
               />
-              <span className="ml-2 text-black-800">Virtual</span>
+              <span className="ml-2">Virtual</span>
             </label>
           </div>
         </div>
 
         {/* Duration Selection */}
         <div className="space-y-3">
-          <label className="block text-sm font-medium uppercase tracking-wide text-black-600">Duration</label>
+          <label className="block text-sm font-medium uppercase tracking-wide">Duration</label>
           <select 
-            className="w-full rounded-md border border-black-200 p-3 focus:ring-2 focus:ring-black focus:border-black transition-colors"
+            className="w-full rounded-md border border-gray-200 p-3 focus:ring-2 focus:ring-black focus:border-black transition-colors"
             value={duration}
             onChange={(e) => setDuration(e.target.value)}
           >
@@ -202,10 +202,10 @@ const PriceCalculator = () => {
         {/* Trainers Section */}
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <label className="block text-sm font-medium uppercase tracking-wide text-black-600">Trainers</label>
+            <label className="block text-sm font-medium uppercase tracking-wide">Trainers</label>
             <button 
               onClick={addTrainer}
-              className="flex items-center gap-2 px-3 py-2 bg-black-100 text-black-700 rounded hover:bg-gray-200 transition-colors text-sm"
+              className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded hover:bg-gray-200 transition-colors text-sm"
             >
               <Plus className="w-4 h-4" />
               Add Trainer
@@ -215,7 +215,7 @@ const PriceCalculator = () => {
           {trainers.map((trainer) => (
             <div key={trainer.id} className="flex gap-4 items-end p-4 bg-gray-50 rounded-lg">
               <div className="flex-1 space-y-2">
-                <label className="block text-sm font-medium text-black-600">Role</label>
+                <label className="block text-sm font-medium">Role</label>
                 <select 
                   className="w-full rounded-md border border-gray-200 p-2 focus:ring-2 focus:ring-black focus:border-black"
                   value={trainer.role}
@@ -228,7 +228,7 @@ const PriceCalculator = () => {
               </div>
               
               <div className="w-24 space-y-2">
-                <label className="block text-sm font-medium text-black-600">Count</label>
+                <label className="block text-sm font-medium">Count</label>
                 <input
                   type="number"
                   min="1"
@@ -241,7 +241,7 @@ const PriceCalculator = () => {
               {trainers.length > 1 && (
                 <button
                   onClick={() => removeTrainer(trainer.id)}
-                  className="text-black-400 hover:text-red-500 transition-colors"
+                  className="hover:text-red-500 transition-colors"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -253,7 +253,7 @@ const PriceCalculator = () => {
         {/* Travel Time Selection */}
         {trainingType === 'in-person' && (
           <div className="space-y-3">
-            <label className="block text-sm font-medium uppercase tracking-wide text-black-600">Travel Time (per person)</label>
+            <label className="block text-sm font-medium uppercase tracking-wide">Travel Time (per person)</label>
             <select 
               className="w-full rounded-md border border-gray-200 p-3 focus:ring-2 focus:ring-black focus:border-black"
               value={travelTime}
@@ -270,7 +270,7 @@ const PriceCalculator = () => {
 
         {/* Project Management Hours */}
         <div className="space-y-3">
-          <label className="block text-sm font-medium uppercase tracking-wide text-black-600">Project Management Hours</label>
+          <label className="block text-sm font-medium uppercase tracking-wide">Project Management Hours</label>
           <input
             type="number"
             min="0"
@@ -280,7 +280,7 @@ const PriceCalculator = () => {
             className="w-full rounded-md border border-gray-200 p-3 focus:ring-2 focus:ring-black focus:border-black"
             placeholder="Enter PM hours"
           />
-          <p className="text-sm text-black-500">Rate: ${PM_RATE}/hour</p>
+          <p className="text-sm">Rate: ${PM_RATE}/hour</p>
         </div>
 
         {/* Price Breakdown */}
@@ -288,7 +288,7 @@ const PriceCalculator = () => {
           <div className="space-y-3">
             {trainers.map((trainer) => (
               <div key={trainer.id} className="flex justify-between text-sm">
-                <span className="text-black-600">
+                <span>
                   {trainer.role.charAt(0).toUpperCase() + trainer.role.slice(1)}
                   {trainer.count > 1 ? ` (${trainer.count}x)` : ''}:
                 </span>
@@ -300,23 +300,23 @@ const PriceCalculator = () => {
 
             {trainingType === 'in-person' && (
               <div className="flex justify-between text-sm">
-                <span className="text-black-600">Travel Fees ({trainers.reduce((sum, t) => sum + t.count, 0)} people):</span>
+                <span>Travel Fees ({trainers.reduce((sum, t) => sum + t.count, 0)} people):</span>
                 <span className="font-medium">${calculatePrices().travelPrice.toLocaleString()}</span>
               </div>
             )}
 
             <div className="flex justify-between text-sm">
-              <span className="text-black-600">Project Management ({pmHours} hours):</span>
+              <span>Project Management ({pmHours} hours):</span>
               <span className="font-medium">${calculatePrices().pmCost.toLocaleString()}</span>
             </div>
 
             <div className="flex justify-between pt-3 border-t text-sm">
-              <span className="text-black-600">Subtotal:</span>
+              <span>Subtotal:</span>
               <span className="font-medium">${calculatePrices().subtotal.toLocaleString()}</span>
             </div>
 
             <div className="flex justify-between text-sm bg-blue-50 p-2 rounded">
-              <span className="text-black-600">Administrative Cost (30%):</span>
+              <span>Administrative Cost (30%):</span>
               <span className="font-medium">${calculatePrices().adminCost.toLocaleString()}</span>
             </div>
 
