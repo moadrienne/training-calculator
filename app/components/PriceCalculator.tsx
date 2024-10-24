@@ -329,5 +329,6 @@ const PriceCalculator = () => {
       </div>
     </div>
   );
+};
 
 export default PriceCalculator;
