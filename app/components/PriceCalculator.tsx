@@ -3,6 +3,41 @@
 import React, { useState } from 'react';
 import { Download, Plus, Trash2 } from 'lucide-react';
 
+interface Trainer {
+  id: number;
+  role: 'lead' | 'trainer' | 'apprentice';
+  count: number;
+}
+
+interface Prices {
+  trainersCost: number;
+  travelPrice: number;
+  pmCost: number;
+  subtotal: number;
+  adminCost: number;
+  total: number;
+}
+
+const PriceCalculator = () => {
+// ... rest of the code stays the same until removeTrainer function
+
+  const removeTrainer = (id: number) => {
+    if (trainers.length > 1) {
+      setTrainers(trainers.filter(t => t.id !== id));
+    }
+  };
+
+  const updateTrainer = (id: number, field: keyof Trainer, value: any) => {
+    setTrainers(trainers.map(t => 
+      t.id === id ? { ...t, [field]: value } : t
+    ));
+  };
+
+"use client"
+
+import React, { useState } from 'react';
+import { Download, Plus, Trash2 } from 'lucide-react';
+
 const PriceCalculator = () => {
   const [trainingType, setTrainingType] = useState('in-person');
   const [duration, setDuration] = useState('60');
