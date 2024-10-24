@@ -3,54 +3,28 @@
 import React, { useState } from 'react';
 import { Download, Plus, Trash2 } from 'lucide-react';
 
+type TrainerRole = 'lead' | 'trainer' | 'apprentice';
+type TravelTimeType = 'Local' | 'Half day' | 'Full day' | 'Extended' | 'N/A';
+
 interface Trainer {
   id: number;
-  role: 'lead' | 'trainer' | 'apprentice';
+  role: TrainerRole;
   count: number;
 }
 
-interface Prices {
-  trainersCost: number;
-  travelPrice: number;
-  pmCost: number;
-  subtotal: number;
-  adminCost: number;
-  total: number;
-}
-
 const PriceCalculator = () => {
-// ... rest of the code stays the same until removeTrainer function
-
-  const removeTrainer = (id: number) => {
-    if (trainers.length > 1) {
-      setTrainers(trainers.filter(t => t.id !== id));
-    }
-  };
-
-  const updateTrainer = (id: number, field: keyof Trainer, value: any) => {
-    setTrainers(trainers.map(t => 
-      t.id === id ? { ...t, [field]: value } : t
-    ));
-  };
-
-"use client"
-
-import React, { useState } from 'react';
-import { Download, Plus, Trash2 } from 'lucide-react';
-
-const PriceCalculator = () => {
-  const [trainingType, setTrainingType] = useState('in-person');
-  const [duration, setDuration] = useState('60');
-  const [trainers, setTrainers] = useState([
+  const [trainingType, setTrainingType] = useState<'in-person' | 'virtual'>('in-person');
+  const [duration, setDuration] = useState<string>('60');
+  const [trainers, setTrainers] = useState<Trainer[]>([
     { id: 1, role: 'lead', count: 1 }
   ]);
-  const [travelTime, setTravelTime] = useState('Local');
-  const [pmHours, setPmHours] = useState(0);
+  const [travelTime, setTravelTime] = useState<TravelTimeType>('Local');
+  const [pmHours, setPmHours] = useState<number>(0);
 
   const PM_RATE = 125;
   const ADMIN_PERCENTAGE = 0.30;
 
-  const pricing = {
+  const pricing: Record<string, Record<string, Record<TrainerRole, number>>> = {
     'in-person': {
       '60': { lead: 500, trainer: 350, apprentice: 150 },
       '90': { lead: 750, trainer: 500, apprentice: 200 },
@@ -65,7 +39,7 @@ const PriceCalculator = () => {
     }
   };
 
-  const travelFees = {
+  const travelFees: Record<TravelTimeType, number> = {
     'Local': 100,
     'Half day': 300,
     'Full day': 600,
@@ -73,20 +47,20 @@ const PriceCalculator = () => {
     'N/A': 0
   };
 
-  const addTrainer = () => {
+  const addTrainer = (): void => {
     const newId = Math.max(...trainers.map(t => t.id)) + 1;
     setTrainers([...trainers, { id: newId, role: 'trainer', count: 1 }]);
   };
 
-  const removeTrainer = (id) => {
+  const removeTrainer = (id: number): void => {
     if (trainers.length > 1) {
       setTrainers(trainers.filter(t => t.id !== id));
     }
   };
 
-  const updateTrainer = (id, field, value) => {
+  const updateTrainer = (id: number, field: keyof Trainer, value: string | number): void => {
     setTrainers(trainers.map(t => 
-      t.id === id ? { ...t, [field]: value } : t
+      t.id === id ? { ...t, [field]: field === 'role' ? value as TrainerRole : value } : t
     ));
   };
 
@@ -114,10 +88,20 @@ const PriceCalculator = () => {
     };
   };
 
-  const exportToCSV = () => {
+  const getDurationLabel = (mins: string): string => {
+    switch(mins) {
+      case '60': return '60 minutes';
+      case '90': return '90 minutes';
+      case '240': return '2-4 hours';
+      case '480': return '5-8 hours';
+      default: return mins + ' minutes';
+    }
+  };
+
+  const exportToCSV = (): void => {
     const prices = calculatePrices();
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const roleLabels = {
+    const roleLabels: Record<TrainerRole, string> = {
       lead: 'Lead Trainer',
       trainer: 'Trainer',
       apprentice: 'Apprentice'
@@ -138,7 +122,7 @@ const PriceCalculator = () => {
       ]),
       [''],
       trainingType === 'in-person' ? ['Travel Time', travelTime] : [],
-      ['Project Management Hours', pmHours],
+      ['Project Management Hours', pmHours.toString()],
       [''],
       ['Cost Breakdown'],
       ['Total Training Fees', `$${prices.trainersCost.toLocaleString()}`],
@@ -159,16 +143,6 @@ const PriceCalculator = () => {
     link.href = URL.createObjectURL(blob);
     link.download = `training-quote-${timestamp}.csv`;
     link.click();
-  };
-
-  const getDurationLabel = (mins) => {
-    switch(mins) {
-      case '60': return '60 minutes';
-      case '90': return '90 minutes';
-      case '240': return '2-4 hours';
-      case '480': return '5-8 hours';
-      default: return mins + ' minutes';
-    }
   };
 
   return (
@@ -283,7 +257,7 @@ const PriceCalculator = () => {
             <select 
               className="w-full rounded-md border border-gray-300 p-2"
               value={travelTime}
-              onChange={(e) => setTravelTime(e.target.value)}
+              onChange={(e) => setTravelTime(e.target.value as TravelTimeType)}
             >
               <option value="Local">Local</option>
               <option value="Half day">Half Day</option>
@@ -312,7 +286,6 @@ const PriceCalculator = () => {
         {/* Price Breakdown */}
         <div className="mt-6 bg-gray-50 rounded-lg p-4">
           <div className="space-y-2">
-            {/* Individual Trainer Costs */}
             {trainers.map((trainer) => (
               <div key={trainer.id} className="flex justify-between text-sm">
                 <span>
