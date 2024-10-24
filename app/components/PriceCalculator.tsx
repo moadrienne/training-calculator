@@ -145,189 +145,190 @@ const PriceCalculator = () => {
     link.click();
   };
 
-return (
-  <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 border border-gray-100">
-    <div className="flex justify-between items-center mb-8 border-b pb-6">
-      <h1 className="text-3xl font-light tracking-tight">Price Calculator</h1>
-      <button 
-        onClick={exportToCSV}
-        className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded hover:bg-gray-800 transition-colors"
-      >
-        <Download className="w-4 h-4" />
-        Export to CSV
-      </button>
-    </div>
-
-    <div className="space-y-8">
-      {/* Training Type Selection */}
-      <div className="space-y-3">
-        <label className="block text-sm font-medium uppercase tracking-wide text-gray-600">Training Type</label>
-        <div className="flex space-x-6">
-          <label className="inline-flex items-center">
-            <input
-              type="radio"
-              className="form-radio text-black focus:ring-black"
-              checked={trainingType === 'in-person'}
-              onChange={() => setTrainingType('in-person')}
-            />
-            <span className="ml-2 text-gray-800">In Person</span>
-          </label>
-          <label className="inline-flex items-center">
-            <input
-              type="radio"
-              className="form-radio text-black focus:ring-black"
-              checked={trainingType === 'virtual'}
-              onChange={() => setTrainingType('virtual')}
-            />
-            <span className="ml-2 text-gray-800">Virtual</span>
-          </label>
-        </div>
-      </div>
-
-      {/* Duration Selection */}
-      <div className="space-y-3">
-        <label className="block text-sm font-medium uppercase tracking-wide text-gray-600">Duration</label>
-        <select 
-          className="w-full rounded-md border border-gray-200 p-3 focus:ring-2 focus:ring-black focus:border-black transition-colors"
-          value={duration}
-          onChange={(e) => setDuration(e.target.value)}
+  return (
+    <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 border border-gray-100">
+      <div className="flex justify-between items-center mb-8 border-b pb-6">
+        <h1 className="text-3xl font-light tracking-tight">Price Calculator</h1>
+        <button 
+          onClick={exportToCSV}
+          className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded hover:bg-gray-800 transition-colors"
         >
-          <option value="60">60 minutes</option>
-          <option value="90">90 minutes</option>
-          <option value="240">2-4 hours</option>
-          <option value="480">5-8 hours</option>
-        </select>
+          <Download className="w-4 h-4" />
+          Export to CSV
+        </button>
       </div>
 
-      {/* Trainers Section */}
-      <div className="space-y-4">
-        <div className="flex justify-between items-center">
-          <label className="block text-sm font-medium uppercase tracking-wide text-gray-600">Trainers</label>
-          <button 
-            onClick={addTrainer}
-            className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors text-sm"
-          >
-            <Plus className="w-4 h-4" />
-            Add Trainer
-          </button>
-        </div>
-        
-        {trainers.map((trainer) => (
-          <div key={trainer.id} className="flex gap-4 items-end p-4 bg-gray-50 rounded-lg">
-            <div className="flex-1 space-y-2">
-              <label className="block text-sm font-medium text-gray-600">Role</label>
-              <select 
-                className="w-full rounded-md border border-gray-200 p-2 focus:ring-2 focus:ring-black focus:border-black"
-                value={trainer.role}
-                onChange={(e) => updateTrainer(trainer.id, 'role', e.target.value)}
-              >
-                <option value="lead">Lead Trainer</option>
-                <option value="trainer">Trainer</option>
-                <option value="apprentice">Apprentice</option>
-              </select>
-            </div>
-            
-            <div className="w-24 space-y-2">
-              <label className="block text-sm font-medium text-gray-600">Count</label>
-              <input
-                type="number"
-                min="1"
-                value={trainer.count}
-                onChange={(e) => updateTrainer(trainer.id, 'count', parseInt(e.target.value) || 1)}
-                className="w-full rounded-md border border-gray-200 p-2 focus:ring-2 focus:ring-black focus:border-black"
-              />
-            </div>
-
-            {trainers.length > 1 && (
-              <button
-                onClick={() => removeTrainer(trainer.id)}
-                className="text-gray-400 hover:text-red-500 transition-colors"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* Travel Time Selection */}
-      {trainingType === 'in-person' && (
+      <div className="space-y-8">
+        {/* Training Type Selection */}
         <div className="space-y-3">
-          <label className="block text-sm font-medium uppercase tracking-wide text-gray-600">Travel Time (per person)</label>
+          <label className="block text-sm font-medium uppercase tracking-wide text-gray-600">Training Type</label>
+          <div className="flex space-x-6">
+            <label className="inline-flex items-center">
+              <input
+                type="radio"
+                className="form-radio text-black focus:ring-black"
+                checked={trainingType === 'in-person'}
+                onChange={() => setTrainingType('in-person')}
+              />
+              <span className="ml-2 text-gray-800">In Person</span>
+            </label>
+            <label className="inline-flex items-center">
+              <input
+                type="radio"
+                className="form-radio text-black focus:ring-black"
+                checked={trainingType === 'virtual'}
+                onChange={() => setTrainingType('virtual')}
+              />
+              <span className="ml-2 text-gray-800">Virtual</span>
+            </label>
+          </div>
+        </div>
+
+        {/* Duration Selection */}
+        <div className="space-y-3">
+          <label className="block text-sm font-medium uppercase tracking-wide text-gray-600">Duration</label>
           <select 
-            className="w-full rounded-md border border-gray-200 p-3 focus:ring-2 focus:ring-black focus:border-black"
-            value={travelTime}
-            onChange={(e) => setTravelTime(e.target.value as TravelTimeType)}
+            className="w-full rounded-md border border-gray-200 p-3 focus:ring-2 focus:ring-black focus:border-black transition-colors"
+            value={duration}
+            onChange={(e) => setDuration(e.target.value)}
           >
-            <option value="Local">Local</option>
-            <option value="Half day">Half Day</option>
-            <option value="Full day">Full Day</option>
-            <option value="Extended">Extended</option>
-            <option value="N/A">N/A</option>
+            <option value="60">60 minutes</option>
+            <option value="90">90 minutes</option>
+            <option value="240">2-4 hours</option>
+            <option value="480">5-8 hours</option>
           </select>
         </div>
-      )}
 
-      {/* Project Management Hours */}
-      <div className="space-y-3">
-        <label className="block text-sm font-medium uppercase tracking-wide text-gray-600">Project Management Hours</label>
-        <input
-          type="number"
-          min="0"
-          step="0.5"
-          value={pmHours}
-          onChange={(e) => setPmHours(parseFloat(e.target.value) || 0)}
-          className="w-full rounded-md border border-gray-200 p-3 focus:ring-2 focus:ring-black focus:border-black"
-          placeholder="Enter PM hours"
-        />
-        <p className="text-sm text-gray-500">Rate: ${PM_RATE}/hour</p>
-      </div>
-
-      {/* Price Breakdown */}
-      <div className="mt-8 bg-gray-50 rounded-lg p-6 border border-gray-100">
-        <div className="space-y-3">
+        {/* Trainers Section */}
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <label className="block text-sm font-medium uppercase tracking-wide text-gray-600">Trainers</label>
+            <button 
+              onClick={addTrainer}
+              className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors text-sm"
+            >
+              <Plus className="w-4 h-4" />
+              Add Trainer
+            </button>
+          </div>
+          
           {trainers.map((trainer) => (
-            <div key={trainer.id} className="flex justify-between text-sm">
-              <span className="text-gray-600">
-                {trainer.role.charAt(0).toUpperCase() + trainer.role.slice(1)}
-                {trainer.count > 1 ? ` (${trainer.count}x)` : ''}:
-              </span>
-              <span className="font-medium">
-                ${(pricing[trainingType][duration][trainer.role] * trainer.count).toLocaleString()}
-              </span>
+            <div key={trainer.id} className="flex gap-4 items-end p-4 bg-gray-50 rounded-lg">
+              <div className="flex-1 space-y-2">
+                <label className="block text-sm font-medium text-gray-600">Role</label>
+                <select 
+                  className="w-full rounded-md border border-gray-200 p-2 focus:ring-2 focus:ring-black focus:border-black"
+                  value={trainer.role}
+                  onChange={(e) => updateTrainer(trainer.id, 'role', e.target.value)}
+                >
+                  <option value="lead">Lead Trainer</option>
+                  <option value="trainer">Trainer</option>
+                  <option value="apprentice">Apprentice</option>
+                </select>
+              </div>
+              
+              <div className="w-24 space-y-2">
+                <label className="block text-sm font-medium text-gray-600">Count</label>
+                <input
+                  type="number"
+                  min="1"
+                  value={trainer.count}
+                  onChange={(e) => updateTrainer(trainer.id, 'count', parseInt(e.target.value) || 1)}
+                  className="w-full rounded-md border border-gray-200 p-2 focus:ring-2 focus:ring-black focus:border-black"
+                />
+              </div>
+
+              {trainers.length > 1 && (
+                <button
+                  onClick={() => removeTrainer(trainer.id)}
+                  className="text-gray-400 hover:text-red-500 transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              )}
             </div>
           ))}
+        </div>
 
-          {trainingType === 'in-person' && (
+        {/* Travel Time Selection */}
+        {trainingType === 'in-person' && (
+          <div className="space-y-3">
+            <label className="block text-sm font-medium uppercase tracking-wide text-gray-600">Travel Time (per person)</label>
+            <select 
+              className="w-full rounded-md border border-gray-200 p-3 focus:ring-2 focus:ring-black focus:border-black"
+              value={travelTime}
+              onChange={(e) => setTravelTime(e.target.value as TravelTimeType)}
+            >
+              <option value="Local">Local</option>
+              <option value="Half day">Half Day</option>
+              <option value="Full day">Full Day</option>
+              <option value="Extended">Extended</option>
+              <option value="N/A">N/A</option>
+            </select>
+          </div>
+        )}
+
+        {/* Project Management Hours */}
+        <div className="space-y-3">
+          <label className="block text-sm font-medium uppercase tracking-wide text-gray-600">Project Management Hours</label>
+          <input
+            type="number"
+            min="0"
+            step="0.5"
+            value={pmHours}
+            onChange={(e) => setPmHours(parseFloat(e.target.value) || 0)}
+            className="w-full rounded-md border border-gray-200 p-3 focus:ring-2 focus:ring-black focus:border-black"
+            placeholder="Enter PM hours"
+          />
+          <p className="text-sm text-gray-500">Rate: ${PM_RATE}/hour</p>
+        </div>
+
+        {/* Price Breakdown */}
+        <div className="mt-8 bg-gray-50 rounded-lg p-6 border border-gray-100">
+          <div className="space-y-3">
+            {trainers.map((trainer) => (
+              <div key={trainer.id} className="flex justify-between text-sm">
+                <span className="text-gray-600">
+                  {trainer.role.charAt(0).toUpperCase() + trainer.role.slice(1)}
+                  {trainer.count > 1 ? ` (${trainer.count}x)` : ''}:
+                </span>
+                <span className="font-medium">
+                  ${(pricing[trainingType][duration][trainer.role] * trainer.count).toLocaleString()}
+                </span>
+              </div>
+            ))}
+
+            {trainingType === 'in-person' && (
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Travel Fees ({trainers.reduce((sum, t) => sum + t.count, 0)} people):</span>
+                <span className="font-medium">${calculatePrices().travelPrice.toLocaleString()}</span>
+              </div>
+            )}
+
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Travel Fees ({trainers.reduce((sum, t) => sum + t.count, 0)} people):</span>
-              <span className="font-medium">${calculatePrices().travelPrice.toLocaleString()}</span>
+              <span className="text-gray-600">Project Management ({pmHours} hours):</span>
+              <span className="font-medium">${calculatePrices().pmCost.toLocaleString()}</span>
             </div>
-          )}
 
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Project Management ({pmHours} hours):</span>
-            <span className="font-medium">${calculatePrices().pmCost.toLocaleString()}</span>
-          </div>
+            <div className="flex justify-between pt-3 border-t text-sm">
+              <span className="text-gray-600">Subtotal:</span>
+              <span className="font-medium">${calculatePrices().subtotal.toLocaleString()}</span>
+            </div>
 
-          <div className="flex justify-between pt-3 border-t text-sm">
-            <span className="text-gray-600">Subtotal:</span>
-            <span className="font-medium">${calculatePrices().subtotal.toLocaleString()}</span>
-          </div>
+            <div className="flex justify-between text-sm bg-blue-50 p-2 rounded">
+              <span className="text-gray-600">Administrative Cost (30%):</span>
+              <span className="font-medium">${calculatePrices().adminCost.toLocaleString()}</span>
+            </div>
 
-          <div className="flex justify-between text-sm bg-blue-50 p-2 rounded">
-            <span className="text-gray-600">Administrative Cost (30%):</span>
-            <span className="font-medium">${calculatePrices().adminCost.toLocaleString()}</span>
-          </div>
-
-          <div className="flex justify-between pt-3 border-t text-lg">
-            <span className="font-medium">Total:</span>
-            <span className="font-bold">${calculatePrices().total.toLocaleString()}</span>
+            <div className="flex justify-between pt-3 border-t text-lg">
+              <span className="font-medium">Total:</span>
+              <span className="font-bold">${calculatePrices().total.toLocaleString()}</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-);
-  
+  );
+};
+
 export default PriceCalculator;
