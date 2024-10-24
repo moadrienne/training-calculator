@@ -288,7 +288,7 @@ const PriceCalculator = () => {
           <div className="space-y-3">
             {trainers.map((trainer) => (
               <div key={trainer.id} className="flex justify-between text-sm">
-                <span className="text-gray-600">
+                <span className="text-black-600">
                   {trainer.role.charAt(0).toUpperCase() + trainer.role.slice(1)}
                   {trainer.count > 1 ? ` (${trainer.count}x)` : ''}:
                 </span>
@@ -300,23 +300,23 @@ const PriceCalculator = () => {
 
             {trainingType === 'in-person' && (
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Travel Fees ({trainers.reduce((sum, t) => sum + t.count, 0)} people):</span>
+                <span className="text-black-600">Travel Fees ({trainers.reduce((sum, t) => sum + t.count, 0)} people):</span>
                 <span className="font-medium">${calculatePrices().travelPrice.toLocaleString()}</span>
               </div>
             )}
 
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Project Management ({pmHours} hours):</span>
+              <span className="text-black-600">Project Management ({pmHours} hours):</span>
               <span className="font-medium">${calculatePrices().pmCost.toLocaleString()}</span>
             </div>
 
             <div className="flex justify-between pt-3 border-t text-sm">
-              <span className="text-gray-600">Subtotal:</span>
+              <span className="text-black-600">Subtotal:</span>
               <span className="font-medium">${calculatePrices().subtotal.toLocaleString()}</span>
             </div>
 
             <div className="flex justify-between text-sm bg-blue-50 p-2 rounded">
-              <span className="text-gray-600">Administrative Cost (30%):</span>
+              <span className="text-black-600">Administrative Cost (30%):</span>
               <span className="font-medium">${calculatePrices().adminCost.toLocaleString()}</span>
             </div>
 
