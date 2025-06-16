@@ -189,27 +189,29 @@ const PriceCalculator = () => {
       ['Training Type', trainingType === 'in-person' ? 'In Person' : 'Virtual'],
       ['Duration', getDurationLabel(duration)],
       [''],
-      ['Trainers'],
-      ...trainers.map((t) => [
-        `${roleLabels[t.role]} - ${locationLabels[t.location]}${t.location === 'traveling' ? ` (${t.travelType})` : ''} (${t.count})`,
-        `Training: ${(pricing[trainingType][duration][t.role] * t.count).toLocaleString()}${
-          trainingType === 'in-person' && t.location === 'traveling' 
-            ? ` | Travel: ${(travelFees[t.travelType] * t.count).toLocaleString()}` 
-            : ''
-        }`
-      ]),
+      ['Trainers & Travel Details'],
+      ...trainers.map((t) => {
+        const travelCost = calculateTrainerTravelCost(t);
+        const trainingCost = pricing[trainingType][duration][t.role] * t.count;
+        return [
+          `${roleLabels[t.role]} - ${locationLabels[t.location]} (${t.count})`,
+          `Training: $${trainingCost.toLocaleString()}${
+            travelCost > 0 ? ` | Travel: $${travelCost.toLocaleString()}` : ''
+          }`
+        ];
+      }),
       [''],
       ['Project Management Hours', pmHours.toString()],
       [''],
       ['Cost Breakdown'],
-      ['Total Training Fees', `${prices.trainersCost.toLocaleString()}`],
+      ['Total Training Fees', `$${prices.trainersCost.toLocaleString()}`],
       trainingType === 'in-person' && prices.travelingTrainersCount > 0 ? 
-        ['Total Travel Fees', `${prices.travelPrice.toLocaleString()}`] : [],
-      ['Project Management', `${prices.pmCost.toLocaleString()}`],
-      ['Subtotal', `${prices.subtotal.toLocaleString()}`],
-      ['Administrative Cost (30%)', `${prices.adminCost.toLocaleString()}`],
+        ['Total Travel Fees', `$${prices.travelPrice.toLocaleString()}`] : [],
+      ['Project Management', `$${prices.pmCost.toLocaleString()}`],
+      ['Subtotal', `$${prices.subtotal.toLocaleString()}`],
+      ['Administrative Cost (30%)', `$${prices.adminCost.toLocaleString()}`],
       [''],
-      ['Total', `${prices.total.toLocaleString()}`],
+      ['Total', `$${prices.total.toLocaleString()}`],
     ].filter(row => row.length > 0);
 
     const csvContent = data
@@ -510,11 +512,11 @@ const PriceCalculator = () => {
                           </span>
                         </div>
                         <div className="text-xs text-gray-600 ml-4">
-                          {details.needsFlight && `Flight: ${details.flightCost * trainer.count} • `}
-                          {details.lodgingNights > 0 && `Lodging: ${details.lodgingNights} nights × ${details.lodgingCostPerNight} × ${trainer.count} • `}
-                          {details.mileageCost > 0 && `Mileage: ${details.mileageCost * trainer.count} • `}
-                          {details.mealAllowance > 0 && `Meals: ${details.mealAllowance * trainer.count} • `}
-                          {details.otherExpenses > 0 && `Other: ${details.otherExpenses * trainer.count}`}
+                          {details.needsFlight && `Flight: $${details.flightCost * trainer.count} • `}
+                          {details.lodgingNights > 0 && `Lodging: ${details.lodgingNights} nights × $${details.lodgingCostPerNight} × ${trainer.count} • `}
+                          {details.mileageCost > 0 && `Mileage: $${details.mileageCost * trainer.count} • `}
+                          {details.mealAllowance > 0 && `Meals: $${details.mealAllowance * trainer.count} • `}
+                          {details.otherExpenses > 0 && `Other: $${details.otherExpenses * trainer.count}`}
                         </div>
                       </div>
                     );
