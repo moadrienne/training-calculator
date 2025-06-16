@@ -5,18 +5,20 @@ import { Download, Plus, Trash2 } from 'lucide-react';
 
 type TrainerRole = 'lead' | 'trainer' | 'apprentice';
 type TravelTimeType = 'Local' | 'Half day' | 'Full day' | 'Extended' | 'N/A';
+type TrainerLocation = 'local' | 'traveling';
 
 interface Trainer {
   id: number;
   role: TrainerRole;
   count: number;
+  location: TrainerLocation;
 }
 
 const PriceCalculator = () => {
   const [trainingType, setTrainingType] = useState<'in-person' | 'virtual'>('in-person');
   const [duration, setDuration] = useState<string>('60');
   const [trainers, setTrainers] = useState<Trainer[]>([
-    { id: 1, role: 'lead', count: 1 }
+    { id: 1, role: 'lead', count: 1, location: 'local' }
   ]);
   const [travelTime, setTravelTime] = useState<TravelTimeType>('Local');
   const [pmHours, setPmHours] = useState<number>(0);
@@ -49,7 +51,7 @@ const PriceCalculator = () => {
 
   const addTrainer = (): void => {
     const newId = Math.max(...trainers.map(t => t.id)) + 1;
-    setTrainers([...trainers, { id: newId, role: 'trainer', count: 1 }]);
+    setTrainers([...trainers, { id: newId, role: 'trainer', count: 1, location: 'local' }]);
   };
 
   const removeTrainer = (id: number): void => {
@@ -60,7 +62,12 @@ const PriceCalculator = () => {
 
   const updateTrainer = (id: number, field: keyof Trainer, value: string | number): void => {
     setTrainers(trainers.map(t => 
-      t.id === id ? { ...t, [field]: field === 'role' ? value as TrainerRole : value } : t
+      t.id === id ? { 
+        ...t, 
+        [field]: field === 'role' ? value as TrainerRole : 
+                field === 'location' ? value as TrainerLocation : 
+                value 
+      } : t
     ));
   };
 
@@ -70,8 +77,13 @@ const PriceCalculator = () => {
       return sum + (rate * trainer.count);
     }, 0);
 
-    const travelPrice = trainingType === 'in-person' ? 
-      travelFees[travelTime] * trainers.reduce((sum, t) => sum + t.count, 0) : 0;
+    // Calculate travel costs only for traveling trainers in in-person sessions
+    const travelingTrainersCount = trainingType === 'in-person' ? 
+      trainers.reduce((sum, trainer) => {
+        return trainer.location === 'traveling' ? sum + trainer.count : sum;
+      }, 0) : 0;
+    
+    const travelPrice = travelingTrainersCount * travelFees[travelTime];
     
     const pmCost = pmHours * PM_RATE;
     const subtotal = trainersCost + travelPrice + pmCost;
@@ -81,6 +93,7 @@ const PriceCalculator = () => {
     return {
       trainersCost,
       travelPrice,
+      travelingTrainersCount,
       pmCost,
       subtotal,
       adminCost,
@@ -106,6 +119,10 @@ const PriceCalculator = () => {
       trainer: 'Trainer',
       apprentice: 'Apprentice'
     };
+    const locationLabels: Record<TrainerLocation, string> = {
+      local: 'Local',
+      traveling: 'Traveling'
+    };
 
     const data = [
       ['Training Price Calculation', ''],
@@ -117,16 +134,18 @@ const PriceCalculator = () => {
       [''],
       ['Trainers'],
       ...trainers.map((t) => [
-        `${roleLabels[t.role]} (${t.count})`,
+        `${roleLabels[t.role]} - ${locationLabels[t.location]} (${t.count})`,
         `$${(pricing[trainingType][duration][t.role] * t.count).toLocaleString()}`
       ]),
       [''],
       trainingType === 'in-person' ? ['Travel Time', travelTime] : [],
+      trainingType === 'in-person' ? ['Traveling Trainers', prices.travelingTrainersCount.toString()] : [],
       ['Project Management Hours', pmHours.toString()],
       [''],
       ['Cost Breakdown'],
       ['Total Training Fees', `$${prices.trainersCost.toLocaleString()}`],
-      trainingType === 'in-person' ? ['Total Travel Fees', `$${prices.travelPrice.toLocaleString()}`] : [],
+      trainingType === 'in-person' && prices.travelingTrainersCount > 0 ? 
+        ['Total Travel Fees', `$${prices.travelPrice.toLocaleString()}`] : [],
       ['Project Management', `$${prices.pmCost.toLocaleString()}`],
       ['Subtotal', `$${prices.subtotal.toLocaleString()}`],
       ['Administrative Cost (30%)', `$${prices.adminCost.toLocaleString()}`],
@@ -226,6 +245,21 @@ const PriceCalculator = () => {
                   <option value="apprentice">Apprentice</option>
                 </select>
               </div>
+
+              {/* Location Selection - only show for in-person training */}
+              {trainingType === 'in-person' && (
+                <div className="flex-1 space-y-2">
+                  <label className="block text-sm font-medium text-black">Location</label>
+                  <select 
+                    className="w-full rounded-md border p-2 focus:ring-2 focus:ring-black focus:border-black text-black"
+                    value={trainer.location}
+                    onChange={(e) => updateTrainer(trainer.id, 'location', e.target.value)}
+                  >
+                    <option value="local">Local</option>
+                    <option value="traveling">Traveling</option>
+                  </select>
+                </div>
+              )}
               
               <div className="w-24 space-y-2">
                 <label className="block text-sm font-medium text-black">Count</label>
@@ -250,10 +284,10 @@ const PriceCalculator = () => {
           ))}
         </div>
 
-        {/* Travel Time Selection */}
+        {/* Travel Time Selection - only show for in-person training */}
         {trainingType === 'in-person' && (
           <div className="space-y-3">
-            <label className="block text-sm font-medium uppercase tracking-wide text-black">Travel Time (per person)</label>
+            <label className="block text-sm font-medium uppercase tracking-wide text-black">Travel Time (per traveling person)</label>
             <select 
               className="w-full rounded-md border p-3 focus:ring-2 focus:ring-black focus:border-black text-black"
               value={travelTime}
@@ -285,44 +319,68 @@ const PriceCalculator = () => {
 
         {/* Price Breakdown */}
         <div className="mt-8 bg-white rounded-lg p-6 border text-black">
-          <div className="space-y-3">
-            {trainers.map((trainer) => (
-              <div key={trainer.id} className="flex justify-between text-sm">
-                <span className="text-black">
-                  {trainer.role.charAt(0).toUpperCase() + trainer.role.slice(1)}
-                  {trainer.count > 1 ? ` (${trainer.count}x)` : ''}:
-                </span>
-                <span className="font-medium text-black">
-                  ${(pricing[trainingType][duration][trainer.role] * trainer.count).toLocaleString()}
-                </span>
+          <div className="space-y-4">
+            {/* Trainer Fees Section */}
+            <div className="space-y-2">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-black border-b pb-1">Trainer Fees</h3>
+              {trainers.map((trainer) => (
+                <div key={trainer.id} className="flex justify-between text-sm pl-2">
+                  <span className="text-black">
+                    {trainer.role.charAt(0).toUpperCase() + trainer.role.slice(1)}
+                    {trainingType === 'in-person' && ` (${trainer.location})`}
+                    {trainer.count > 1 ? ` (${trainer.count}x)` : ''}:
+                  </span>
+                  <span className="font-medium text-black">
+                    ${(pricing[trainingType][duration][trainer.role] * trainer.count).toLocaleString()}
+                  </span>
+                </div>
+              ))}
+              <div className="flex justify-between text-sm font-medium border-t pt-2 pl-2">
+                <span className="text-black">Total Trainer Fees:</span>
+                <span className="text-black">${calculatePrices().trainersCost.toLocaleString()}</span>
               </div>
-            ))}
+            </div>
 
-            {trainingType === 'in-person' && (
-              <div className="flex justify-between text-sm">
-                <span className="text-black">Travel Fees ({trainers.reduce((sum, t) => sum + t.count, 0)} people):</span>
-                <span className="font-medium text-black">${calculatePrices().travelPrice.toLocaleString()}</span>
+            {/* Travel Costs Section - only show if there are traveling trainers */}
+            {trainingType === 'in-person' && calculatePrices().travelingTrainersCount > 0 && (
+              <div className="space-y-2">
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-black border-b pb-1">Travel Costs (Estimated)</h3>
+                <div className="flex justify-between text-sm pl-2">
+                  <span className="text-black">
+                    Travel Expenses ({calculatePrices().travelingTrainersCount} traveling people × ${travelFees[travelTime]}):
+                  </span>
+                  <span className="font-medium text-black">${calculatePrices().travelPrice.toLocaleString()}</span>
+                </div>
               </div>
             )}
 
-            <div className="flex justify-between text-sm">
-              <span className="text-black">Project Management ({pmHours} hours):</span>
-              <span className="font-medium text-black">${calculatePrices().pmCost.toLocaleString()}</span>
-            </div>
+            {/* Project Management Section */}
+            {pmHours > 0 && (
+              <div className="space-y-2">
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-black border-b pb-1">Project Management</h3>
+                <div className="flex justify-between text-sm pl-2">
+                  <span className="text-black">PM Hours ({pmHours} × ${PM_RATE}):</span>
+                  <span className="font-medium text-black">${calculatePrices().pmCost.toLocaleString()}</span>
+                </div>
+              </div>
+            )}
 
-            <div className="flex justify-between pt-3 border-t text-sm">
-              <span className="text-black">Subtotal:</span>
-              <span className="font-medium text-black">${calculatePrices().subtotal.toLocaleString()}</span>
-            </div>
+            {/* Summary Section */}
+            <div className="space-y-2 pt-3 border-t">
+              <div className="flex justify-between text-sm">
+                <span className="text-black">Subtotal:</span>
+                <span className="font-medium text-black">${calculatePrices().subtotal.toLocaleString()}</span>
+              </div>
 
-            <div className="flex justify-between text-sm bg-white p-2 rounded border">
-              <span className="text-black">Administrative Cost (30%):</span>
-              <span className="font-medium text-black">${calculatePrices().adminCost.toLocaleString()}</span>
-            </div>
+              <div className="flex justify-between text-sm bg-gray-50 p-2 rounded border">
+                <span className="text-black">Administrative Cost (30%):</span>
+                <span className="font-medium text-black">${calculatePrices().adminCost.toLocaleString()}</span>
+              </div>
 
-            <div className="flex justify-between pt-3 border-t text-lg">
-              <span className="font-medium text-black">Total:</span>
-              <span className="font-bold text-black">${calculatePrices().total.toLocaleString()}</span>
+              <div className="flex justify-between pt-3 border-t text-lg">
+                <span className="font-medium text-black">Total:</span>
+                <span className="font-bold text-black">${calculatePrices().total.toLocaleString()}</span>
+              </div>
             </div>
           </div>
         </div>
