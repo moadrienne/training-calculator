@@ -66,14 +66,6 @@ const PriceCalculator = () => {
     }
   };
 
-  const travelFees: Record<TravelTimeType, number> = {
-    'Local': 100,
-    'Half day': 300,
-    'Full day': 600,
-    'Extended': 800,
-    'N/A': 0
-  };
-
   const addTrainer = (): void => {
     const newId = Math.max(...trainers.map(t => t.id)) + 1;
     setTrainers([...trainers, { 
